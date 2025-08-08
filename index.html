@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm Visualizer</title>
+    <link rel="stylesheet" href="./src/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-bar"></i> Sorting Algorithm Visualizer</h1>
+            <p>Interactive visualization of sorting algorithms with step-by-step animation</p>
+        </header>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="algorithm-select">Algorithm:</label>
+                <select id="algorithm-select">
+                    <optgroup label="Comparison Based">
+                        <option value="bubble">Bubble Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="merge">Merge Sort</option>
+                        <option value="quick">Quick Sort</option>
+                        <option value="heap">Heap Sort</option>
+                        <option value="cycle">Cycle Sort</option>
+                        <option value="merge3way">3-way Merge Sort</option>
+                    </optgroup>
+                    <optgroup label="Non-Comparison Based">
+                        <option value="counting">Counting Sort</option>
+                        <option value="radix">Radix Sort</option>
+                        <option value="bucket">Bucket Sort</option>
+                        <option value="pigeonhole">Pigeonhole Sort</option>
+                    </optgroup>
+                    <optgroup label="Hybrid Algorithms">
+                        <option value="intro">IntroSort</option>
+                        <option value="tim">TimSort</option>
+                        <option value="comb">Comb Sort</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="dataset-select">Dataset:</label>
+                <select id="dataset-select">
+                    <option value="random">Random Array</option>
+                    <option value="reversed">Reversed Array</option>
+                    <option value="nearly-sorted">Nearly Sorted</option>
+                    <option value="few-unique">Few Unique Values</option>
+                    <option value="custom">Custom Input</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="array-size">Array Size:</label>
+                <input type="range" id="array-size" min="5" max="100" value="50">
+                <span id="size-value">50</span>
+            </div>
+
+            <div class="control-group">
+                <label for="speed-control">Speed:</label>
+                <input type="range" id="speed-control" min="1" max="10" value="5">
+                <span id="speed-value">5</span>
+            </div>
+
+            <div class="control-group">
+                <label for="sort-order">Sort Order:</label>
+                <select id="sort-order">
+                    <option value="ascending">Ascending ↑</option>
+                    <option value="descending">Descending ↓</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-labels" checked>
+                    <span class="checkmark"></span>
+                    Show Value Labels
+                </label>
+            </div>
+        </div>
+
+        <div class="custom-input-panel" id="custom-input-panel" style="display: none;">
+            <div class="control-group">
+                <label for="custom-array">Enter numbers (comma-separated):</label>
+                <input type="text" id="custom-array" placeholder="e.g., 5,2,8,1,9,3">
+                <button id="apply-custom">Apply</button>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="generate-btn" class="btn primary">
+                <i class="fas fa-sync-alt"></i> Generate New Array
+            </button>
+            <button id="sort-btn" class="btn success">
+                <i class="fas fa-play"></i> Start Sorting
+            </button>
+            <button id="pause-btn" class="btn warning" disabled>
+                <i class="fas fa-pause"></i> Pause
+            </button>
+            <button id="reset-btn" class="btn danger">
+                <i class="fas fa-stop"></i> Reset
+            </button>
+        </div>
+
+        <div class="visualization-container">
+            <div id="array-container" class="array-container">
+                <!-- Array bars will be generated here -->
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="stats-section">
+                <h3>Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Comparisons:</span>
+                        <span id="comparisons-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Swaps:</span>
+                        <span id="swaps-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Time:</span>
+                        <span id="time-elapsed">0ms</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Array Size:</span>
+                        <span id="array-size-display">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="algorithm-info">
+                <h3>Algorithm Information</h3>
+                <div id="algorithm-details">
+                    <h4 id="algo-name">Bubble Sort</h4>
+                    <div class="complexity-info">
+                        <p><strong>Time Complexity:</strong></p>
+                        <ul>
+                            <li>Best: <span id="best-case">O(n)</span></li>
+                            <li>Average: <span id="avg-case">O(n²)</span></li>
+                            <li>Worst: <span id="worst-case">O(n²)</span></li>
+                        </ul>
+                        <p><strong>Space Complexity:</strong> <span id="space-complexity">O(1)</span></p>
+                        <p><strong>Stable:</strong> <span id="stability">Yes</span></p>
+                    </div>
+                    <div class="description">
+                        <p id="algo-description">
+                            Bubble sort repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h4>Legend</h4>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color comparing"></div>
+                    <span>Comparing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color swapping"></div>
+                    <span>Swapping</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color sorted"></div>
+                    <span>Sorted</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color pivot"></div>
+                    <span>Pivot (Quick Sort)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./src/script.js"></script>
+</body>
+</html>
